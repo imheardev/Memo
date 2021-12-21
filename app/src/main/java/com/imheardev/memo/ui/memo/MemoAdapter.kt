@@ -29,6 +29,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
             parent,false)
         var holder = ViewHolder(binding)
         holder.itemView.setOnClickListener {
+            //TODO 避免多次点击，databingding方法
             val position = holder.absoluteAdapterPosition
             val memo = memoList[position]
             MemoActivity.actionStart(context,memo.content,memo.id)
@@ -46,7 +47,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val memo = memoList[position]
         holder.content.text = memo.content
-        holder.remark.text = memo.remark
+        holder.remark.text = memo.updateTime?:"12月18日"
     }
 
     override fun getItemCount() = memoList.size

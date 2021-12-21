@@ -1,5 +1,6 @@
 package com.imheardev.memo.ui.memo
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -21,5 +22,6 @@ class MemoViewModel:ViewModel() {
 
     fun searchMemos(query:String){
         searchLiveData.value = query
+        Log.d("MemoViewModel", "searchMemos")
     }
 }

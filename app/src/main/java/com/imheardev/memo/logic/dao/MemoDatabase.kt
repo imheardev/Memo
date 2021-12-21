@@ -11,7 +11,7 @@ import com.imheardev.memo.logic.model.Memo
 /**
  * Created by wuto on 2021-12-18.
  */
-@Database(version = 2,entities = [Memo::class])
+@Database(version = 3,entities = [Memo::class])
 abstract class MemoDatabase:RoomDatabase(){
 
     abstract fun memoDao():MemoDao
@@ -29,6 +29,15 @@ abstract class MemoDatabase:RoomDatabase(){
                 }
             }
         }
+        var MIGRATION_2_3 = object:Migration(2,3){
+            //Memo表增加字段：updateTime text 最后更新时间
+            override fun migrate(database: SupportSQLiteDatabase) {
+                var sqlV3 = arrayOf("alter table Memo add column updateTime text not null default 'unknow'")
+                sqlV3.forEach {
+                    database.execSQL(it)
+                }
+            }
+        }
 
         private var instance:MemoDatabase?=null
 
@@ -39,7 +48,7 @@ abstract class MemoDatabase:RoomDatabase(){
             }
             return Room.databaseBuilder(context.applicationContext,
             MemoDatabase::class.java,"memo_database")
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build().apply{
                     instance = this
                 }
