@@ -1,9 +1,6 @@
 package com.imheardev.memo.logic.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.imheardev.memo.logic.model.Memo
 
 /**
@@ -13,6 +10,9 @@ import com.imheardev.memo.logic.model.Memo
 interface MemoDao {
     @Insert
     fun insertMemo(memo:Memo):Long
+
+    @Delete
+    fun deleteMemo(memo: Memo)
 
     @Update
     fun updateMemo(memo:Memo)

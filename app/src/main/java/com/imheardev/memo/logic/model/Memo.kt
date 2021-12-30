@@ -6,13 +6,14 @@ import androidx.room.PrimaryKey
 /**
  * Created by wuto on 2021-12-18.
  * content 内容
- * done 是否完成
+ * done 状态[0.新建,1.完成,2.删除]
  * remark 备注
  * alertTime 提醒时间
  * createTime 创建时间
  * updateTime 更新时间
  * important 是否重要
  * urgent 是否紧急
+ * delete 是否删除
  */
 @Entity
 data class Memo(var content:String,var done:Int=0,

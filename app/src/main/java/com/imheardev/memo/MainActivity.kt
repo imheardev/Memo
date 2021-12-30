@@ -19,7 +19,7 @@ class MainActivity : BaseActivity() {
 
         binding.addMemoBtn.setOnClickListener {
             "you clicked addMemoBtn".showToast()
-            //TODO add data
+            //TODO add data on real operator
             addData()
         }
     }

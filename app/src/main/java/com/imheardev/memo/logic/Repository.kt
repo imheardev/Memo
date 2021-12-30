@@ -22,4 +22,23 @@ object Repository {
         }
         emit(result)
     }
+
+    fun deleteMemo(memo: Memo) = liveData(Dispatchers.IO) {
+        val result = try {
+            Result.success(memoDao.deleteMemo(memo))
+        }catch (e:Exception){
+            Result.failure<List<Memo>>(e)
+        }
+        emit(result)
+    }
+
+    fun deleteMemo1(memo: Memo) {
+        val result = try {
+            Thread {
+                memoDao.deleteMemo(memo)
+            }.start()
+        }catch (e:Exception){
+            Result.failure<List<Memo>>(e)
+        }
+    }
 }

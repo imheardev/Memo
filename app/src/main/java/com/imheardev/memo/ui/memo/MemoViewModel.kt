@@ -22,6 +22,16 @@ class MemoViewModel:ViewModel() {
 
     fun searchMemos(query:String){
         searchLiveData.value = query
-        Log.d("MemoViewModel", "searchMemos")
+    }
+
+    // 删除一个列表项
+    private val deleteLiveData = MutableLiveData<Memo>()
+
+    val memoDeleteLiveData = Transformations.switchMap(deleteLiveData){memo ->
+        Repository.deleteMemo(memo)
+    }
+
+    fun deleteMemo(memo:Memo){
+        deleteLiveData.value = memo
     }
 }

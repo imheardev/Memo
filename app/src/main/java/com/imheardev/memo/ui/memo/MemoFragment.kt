@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.imheardev.memo.databinding.FragmentMemoBinding
+import com.imheardev.memo.logic.model.Memo
 import com.imheardev.memo.showToast
 
 /**
@@ -36,10 +36,23 @@ class MemoFragment:Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        // 创建并设置布局管理器
         val layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.layoutManager = layoutManager
+        // 创建并设置列表适配器
         adapter = MemoAdapter(this,viewModel.memoList)
+        // 2021/12/29 add
+        adapter.attachiToRecyclerView(binding.recyclerView)
+        // 实例化adapter中回调接口
+        var callBack:CallBack = object : CallBack {
+            override fun onRemove(memo: Memo) {
+                Log.d(TAG, "CallBack.onRemove")
+                viewModel.deleteMemo(memo)
+            }
+        }
+        adapter.setCallBack(callBack)
         binding.recyclerView.adapter = adapter
+        // 查询视图更新事件监听
         binding.searchMemoEdit.addTextChangedListener{editable ->
             val content = editable.toString()
             if (content.isNotEmpty()){
@@ -48,6 +61,7 @@ class MemoFragment:Fragment() {
                 viewModel.searchMemos("")
             }
         }
+        // 观察memoLiveData变化，并显示到ui上
         viewModel.memoLiveData.observe(this, Observer{ result ->
             val memos = result.getOrNull()
             if(memos != null){
@@ -58,6 +72,15 @@ class MemoFragment:Fragment() {
                 adapter.notifyDataSetChanged()
             }else{
                 "没有待办".showToast()
+            }
+        })
+        // 观察deleteLiveData变化，并显示到ui上
+        viewModel.memoDeleteLiveData.observe(this, Observer{ result ->
+            val content = binding.searchMemoEdit.text.toString()
+            if (content.isNotEmpty()){
+                viewModel.searchMemos(content)
+            }else{
+                viewModel.searchMemos("")
             }
         })
         Log.d(TAG, "onActivityCreated")
