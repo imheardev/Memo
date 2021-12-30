@@ -96,9 +96,8 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
      * 删除列表项
      */
     fun itemDelete(index:Int){
-        val memo = memoList[index]
         // 使用回调方法
-        callBack.onRemove(memo)
+        callBack.onRemove(index)
     }
 
     /**
@@ -205,5 +204,5 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
 
 //添加一个回调接口 CallBack
 interface CallBack {
-    fun onRemove(memo: Memo)
+    fun onRemove(index:Int)
 }

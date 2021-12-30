@@ -45,8 +45,9 @@ class MemoFragment:Fragment() {
         adapter.attachiToRecyclerView(binding.recyclerView)
         // 实例化adapter中回调接口
         var callBack:CallBack = object : CallBack {
-            override fun onRemove(memo: Memo) {
+            override fun onRemove(index:Int) {
                 Log.d(TAG, "CallBack.onRemove")
+                val memo = viewModel.memoList[index]
                 viewModel.deleteMemo(memo)
             }
         }
