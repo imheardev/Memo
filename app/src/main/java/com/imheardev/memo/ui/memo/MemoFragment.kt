@@ -59,9 +59,15 @@ class MemoFragment:Fragment() {
             val content = editable.toString()
             if (content.isNotEmpty()){
                 viewModel.searchMemos(content)
+                binding.delSearchMemoEdit.visibility = View.VISIBLE
             }else{
                 viewModel.searchMemos("")
+                binding.delSearchMemoEdit.visibility = View.GONE
             }
+        }
+        //设置删除图标点击事件
+        binding.delSearchMemoEdit.setOnClickListener {
+            binding.searchMemoEdit.setText("")
         }
         // 观察memoLiveData变化，并显示到ui上
         viewModel.memoLiveData.observe(this, Observer{ result ->

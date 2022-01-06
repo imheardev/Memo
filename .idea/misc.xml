@@ -3,9 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/activity_memo.xml" value="0.1" />
-        <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/fragment_memo.xml" value="0.1598731884057971" />
+        <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/fragment_memo.xml" value="0.1" />
         <entry key="..\:/develop/AndroidStudioProjects/Memo/app/src/main/res/layout/memo_item.xml" value="0.1598731884057971" />
       </map>
     </option>
@@ -15,5 +15,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>

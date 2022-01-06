@@ -25,7 +25,19 @@
             android:layout_marginEnd="10dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
+            android:maxLines="1"
             android:hint="收索待办"/>
+
+        <ImageView
+            android:id="@+id/delSearchMemoEdit"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            android:src="@mipmap/ic_delete"
+            android:layout_gravity="right|top"/>
+
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
