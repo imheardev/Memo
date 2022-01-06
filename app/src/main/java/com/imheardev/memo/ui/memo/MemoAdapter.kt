@@ -1,18 +1,26 @@
 package com.imheardev.memo.ui.memo
 
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors.getColor
 import com.imheardev.memo.MemoApplication.Companion.context
+import com.imheardev.memo.R
 import com.imheardev.memo.databinding.MemoItemBinding
 import com.imheardev.memo.logic.Repository
 import com.imheardev.memo.logic.model.Memo
+import com.imheardev.memo.util.KeywordUtil
 
 /**
  * RecyclerView 适配器
@@ -20,6 +28,8 @@ import com.imheardev.memo.logic.model.Memo
  */
 class MemoAdapter(private val fragment: Fragment,private val memoList:List<Memo>):
 RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
+
+    private lateinit var _keyword:String
 
     // 删除回调接口
     private lateinit var callBack:CallBack
@@ -55,11 +65,8 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     inner class ViewHolder(binding: MemoItemBinding):RecyclerView.ViewHolder(binding.root){
         val content:TextView = binding.content
         val remark:TextView = binding.remark
-        // 2021/12/29 add
+        // 列表项遮罩
         var mShadow:View = binding.itemShadow
-//        constructor(itemView: View) : super(itemView) {
-//            mShadow = itemView.findViewById(R.id.itemShadow)
-//        }
     }
 
     /**
@@ -73,7 +80,8 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
             //TODO 避免多次点击，databingding方法
             val position = holder.absoluteAdapterPosition
             val memo = memoList[position]
-            MemoActivity.actionStart(context,memo.content,memo.id)
+            //这里将fragment中的查询关键字传入actionStart，用作子画面关键字变色高亮显示
+            MemoActivity.actionStart(context,memo.content,memo.id,_keyword)
         }
         return holder
     }
@@ -83,7 +91,10 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val memo = memoList[position]
-        holder.content.text = memo.content
+        //关键字变色高亮显示
+        var spanable = KeywordUtil.matcherSearchTitle(context.getResources().getColor(R.color.blue_policy),memo.content,_keyword)
+        holder.content.setText(spanable)
+        //TODO这里对日期进行自定义格式化
         holder.remark.text = memo.updateTime?:"12月18日"
     }
 
@@ -98,6 +109,14 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     fun itemDelete(index:Int){
         // 使用回调方法
         callBack.onRemove(index)
+    }
+
+    /**
+     * 传递关键字
+     */
+    fun setKeyword(value:String) {
+        // 使用回调方法
+        _keyword = value
     }
 
     /**
@@ -144,11 +163,6 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
                 //此处为memoList不为空时
                 memoList.let{
                     var from = memoList[fromPos]
-                    //TODO  在adapter中实现itemMove
-//                    memoList.removeAt(fromPos)
-//                    memoList.add(toPos,from)
-//                    notifyItemMoved(fromPos,toPos)
-//                    return true
                     itemMove(fromPos,toPos)
                 }
             }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEach
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -64,13 +65,18 @@ class MemoFragment:Fragment() {
         }
         // 观察memoLiveData变化，并显示到ui上
         viewModel.memoLiveData.observe(this, Observer{ result ->
-            val memos = result.getOrNull()
-            if(memos != null){
+            val tempMemos = result.getOrNull()
+            if(tempMemos != null){
+                //这里对列表进行排序:按updateTime倒序
+                val memos = tempMemos.sortedByDescending { it.updateTime }
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.bgImageView.visibility = View.GONE
                 viewModel.memoList.clear()
                 viewModel.memoList.addAll(memos)
+                //传递关键字，对列表中的关键字进行关键字变色高亮显示
+                adapter.setKeyword(binding.searchMemoEdit.text.toString())
                 adapter.notifyDataSetChanged()
+
             }else{
                 "没有待办".showToast()
             }
@@ -102,7 +108,7 @@ class MemoFragment:Fragment() {
     override fun onStart() {
         super.onStart()
         // 加载待办列表
-        viewModel.searchMemos("")
+        viewModel.searchMemos(binding.searchMemoEdit.text.toString())
         Log.d(TAG, "onStart")
     }
 

@@ -32,13 +32,13 @@ object Repository {
         emit(result)
     }
 
-    fun deleteMemo1(memo: Memo) {
+    fun insertMemo(memo: Memo) = liveData(Dispatchers.IO) {
+        Log.d("Repository","insertMemo")
         val result = try {
-            Thread {
-                memoDao.deleteMemo(memo)
-            }.start()
+            Result.success(memoDao.insertMemo(memo))
         }catch (e:Exception){
             Result.failure<List<Memo>>(e)
         }
+        emit(result)
     }
 }

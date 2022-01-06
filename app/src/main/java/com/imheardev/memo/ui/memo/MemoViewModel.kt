@@ -13,7 +13,6 @@ import com.imheardev.memo.logic.model.Memo
 class MemoViewModel:ViewModel() {
     private val searchLiveData = MutableLiveData<String>()
 
-    // 暂时不用
     val memoList = ArrayList<Memo>()
 
     val memoLiveData = Transformations.switchMap(searchLiveData){query ->
