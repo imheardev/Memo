@@ -6,15 +6,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.forEach
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.imheardev.memo.MemoApplication
 import com.imheardev.memo.databinding.FragmentMemoBinding
 import com.imheardev.memo.logic.model.Memo
 import com.imheardev.memo.showToast
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Created by wuto on 2021-12-18.
@@ -45,14 +49,20 @@ class MemoFragment:Fragment() {
         // 2021/12/29 add
         adapter.attachiToRecyclerView(binding.recyclerView)
         // 实例化adapter中回调接口
-        var callBack:CallBack = object : CallBack {
-            override fun onRemove(index:Int) {
-                Log.d(TAG, "CallBack.onRemove")
-                val memo = viewModel.memoList[index]
-                viewModel.deleteMemo(memo)
+        var itemSwipedListener:ItemSwipedListener = object :ItemSwipedListener{
+            override fun onItemSwiped(index: Int, direction: Int) {
+                if(direction == 32){
+                    // 从左往右滑动
+                    val memo = viewModel.memoList[index]
+                    viewModel.deleteMemo(memo)
+                }
+                if (direction == 16){
+                    // 从右往左滑动 TODO 虽然没有物理删除，但是列表中少了
+                    showExitDialog(index)
+                }
             }
         }
-        adapter.setCallBack(callBack)
+        adapter.setItemSwipedListener(itemSwipedListener)
         binding.recyclerView.adapter = adapter
         // 查询视图更新事件监听
         binding.searchMemoEdit.addTextChangedListener{editable ->
@@ -97,6 +107,24 @@ class MemoFragment:Fragment() {
             }
         })
         Log.d(TAG, "onActivityCreated")
+    }
+
+    //        TODO 返回选择结果，改为公共对话框模板,单例模式?
+    private fun showExitDialog(index: Int){
+        var builder= AlertDialog.Builder(this.activity!!)
+        builder.setTitle("提示")
+        builder.setMessage("是否删除?")
+        builder.setPositiveButton("删除"){dialog,which ->
+            val memo = viewModel.memoList[index]
+            viewModel.deleteMemo(memo)
+        }
+        builder.setNegativeButton("不删除"){dialog,which ->
+
+        }
+        var dialog: AlertDialog = builder.create()
+        if(!dialog.isShowing){
+            dialog.show()
+        }
     }
 
     companion object{

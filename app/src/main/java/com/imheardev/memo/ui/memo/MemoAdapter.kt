@@ -31,12 +31,12 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
 
     private lateinit var _keyword:String
 
-    // 删除回调接口
-    private lateinit var callBack:CallBack
+    // 左右滑动列表项回调接口
+    private lateinit var itemSwipedListener:ItemSwipedListener
 
-    //定义 setCallBack() 方法
-    fun setCallBack(callBack: CallBack?) {
-        this.callBack = callBack!!
+    //定义setItemSwipedListener()方法
+    fun setItemSwipedListener(itemSwipedListener:ItemSwipedListener) {
+        this.itemSwipedListener = itemSwipedListener!!
     }
 
     //拖拽回调接口
@@ -104,11 +104,11 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     override fun getItemCount() = memoList.size
 
     /**
-     * 删除列表项
+     *  左右滑动列表项
      */
-    fun itemDelete(index:Int){
+    fun onItemSwiped(index:Int,direction:Int,){
         // 使用回调方法
-        callBack.onRemove(index)
+        itemSwipedListener.onItemSwiped(index,direction)
     }
 
     /**
@@ -172,7 +172,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             //用于执行滑动删除
-            itemDelete(viewHolder.absoluteAdapterPosition)
+            onItemSwiped(viewHolder.absoluteAdapterPosition,direction)
         }
 
         //不重写默认是返回true的 如果返回false的话 需要使用ItemTouchHelper的实例方法
@@ -216,7 +216,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     }
 }
 
-//添加一个回调接口 CallBack
-interface CallBack {
-    fun onRemove(index:Int)
+//添加一个回调接口 ItemSwipedListener
+interface ItemSwipedListener {
+    fun onItemSwiped(index:Int,direction: Int)
 }
