@@ -43,7 +43,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
     private val mItemDragHelperCallback = ItemDragHelperCallback()
     //触摸辅助类 可以用于主动调用删除
     private val mItemTouchHelper = ItemTouchHelper(mItemDragHelperCallback)
-    //生明常量
+    //声明常量
     companion object {
         open val TYPE_TITLE: Int = 1
         open val TYPE_SUB_IMG: Int = 2
@@ -107,7 +107,7 @@ RecyclerView.Adapter<MemoAdapter.ViewHolder>(){
      *  左右滑动列表项
      */
     fun onItemSwiped(index:Int,direction:Int,){
-        // 使用回调方法
+        //使用回调方法
         itemSwipedListener.onItemSwiped(index,direction)
     }
 

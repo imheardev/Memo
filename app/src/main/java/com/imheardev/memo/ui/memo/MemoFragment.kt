@@ -53,13 +53,14 @@ class MemoFragment:Fragment() {
             override fun onItemSwiped(index: Int, direction: Int) {
                 if(direction == 32){
                     // 从左往右滑动
-                    val memo = viewModel.memoList[index]
-                    viewModel.deleteMemo(memo)
+                    showExitDialog(index,direction)
                 }
                 if (direction == 16){
                     // 从右往左滑动 TODO 虽然没有物理删除，但是列表中少了
-                    showExitDialog(index)
+                    showExitDialog(index,direction)
                 }
+                val content = binding.searchMemoEdit.text.toString()
+                viewModel.searchMemos(content)
             }
         }
         adapter.setItemSwipedListener(itemSwipedListener)
@@ -92,7 +93,9 @@ class MemoFragment:Fragment() {
                 //传递关键字，对列表中的关键字进行关键字变色高亮显示
                 adapter.setKeyword(binding.searchMemoEdit.text.toString())
                 adapter.notifyDataSetChanged()
-
+//                val msg = viewModel.memoList.size.toString()+"条待办"
+                val msg = adapter.itemCount.toString()+"条待办"
+                binding.asearchMemoEdit.setText(msg)
             }else{
                 "没有待办".showToast()
             }
@@ -109,11 +112,15 @@ class MemoFragment:Fragment() {
         Log.d(TAG, "onActivityCreated")
     }
 
-    //        TODO 返回选择结果，改为公共对话框模板,单例模式?
-    private fun showExitDialog(index: Int){
+    //TODO 返回选择结果，改为公共对话框模板,单例模式?
+    private fun showExitDialog(index: Int, direction: Int){
         var builder= AlertDialog.Builder(this.activity!!)
-        builder.setTitle("提示")
-        builder.setMessage("是否删除?")
+        builder.setTitle("是否删除")
+        val msg = when(viewModel.memoList[index].content.length){
+            in 1..15 -> viewModel.memoList[index].content
+            else -> viewModel.memoList[index].content.substring(0,15)+"..."
+        }
+        builder.setMessage("$msg")
         builder.setPositiveButton("删除"){dialog,which ->
             val memo = viewModel.memoList[index]
             viewModel.deleteMemo(memo)
